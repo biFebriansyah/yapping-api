@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { GetUserDto, CreateUserDto } from './users.dto';
 import UserService from './users.service';
+import { HashPass } from '@utils/bcrypt';
 
 @Controller('users')
 class UserController {
@@ -8,12 +9,21 @@ class UserController {
 
   @Get()
   async getAll(): Promise<GetUserDto[]> {
-    return this.service.getAllUser();
+    try {
+      return this.service.getAllUser();
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Post()
   async createOne(@Body() body: CreateUserDto): Promise<any> {
-    return this.service.createUser(body);
+    try {
+      const password = await HashPass(body.password);
+      return this.service.createUser({ ...body, password });
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

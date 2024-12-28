@@ -10,7 +10,7 @@ class UserService {
 
   async getAllUser(): Promise<GetUserDto[]> {
     try {
-      return await this.userModel.find().exec();
+      return await this.userModel.find({}, { password: 0 }).exec();
     } catch (error) {
       throw error;
     }
