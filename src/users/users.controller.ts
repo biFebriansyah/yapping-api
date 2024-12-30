@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { GetUserDto, CreateUserDto } from './users.dto';
 import UserService from './users.service';
 import { HashPass } from '@utils/bcrypt';
@@ -6,6 +6,15 @@ import { HashPass } from '@utils/bcrypt';
 @Controller('users')
 class UserController {
   constructor(private readonly service: UserService) {}
+
+  @Get(':userId')
+  async getOne(@Param() params: any): Promise<any> {
+    try {
+      return await this.service.getUserDetail(params.userId);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   @Get()
   async getAll(): Promise<GetUserDto[]> {
