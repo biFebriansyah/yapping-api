@@ -24,6 +24,18 @@ class UserService {
     }
   }
 
+  async getPasswordByUsername(username: string): Promise<any> {
+    try {
+      const user = await this.userModel
+        .findOne({ username }, { password: 1, userId: 1 })
+        .exec();
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getUserDetail(userId: string): Promise<any> {
     try {
       const objectId = new Types.ObjectId(userId);

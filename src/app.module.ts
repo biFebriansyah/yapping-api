@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongoMod } from '@utils/mongo';
+import { mongoModules } from './modules/mongo';
+import { JwtModules } from './modules/jwt';
 import UserModule from './users/users.module';
+import AuthModule from './auth/auth.module';
 import ProfileModule from './profile/profile.module';
 import ChatModule from './chats/chat.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongoMod.forRoot(),
+    mongoModules.forRoot(),
+    JwtModules.forRoot(),
     UserModule,
+    AuthModule,
     ProfileModule,
     ChatModule,
   ],

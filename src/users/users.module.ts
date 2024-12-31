@@ -14,5 +14,6 @@ import Service from './users.service';
   ],
   controllers: [Controller],
   providers: [Service],
+  exports: [Service],
 })
 export default class UserModule {}

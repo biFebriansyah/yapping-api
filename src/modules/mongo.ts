@@ -2,7 +2,7 @@ import { Module, DynamicModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({})
-export class MongoMod {
+export class mongoModules {
   static forRoot(): DynamicModule {
     return {
       imports: [
@@ -14,7 +14,7 @@ export class MongoMod {
           directConnection: true,
         }),
       ],
-      module: MongoMod,
+      module: mongoModules,
     };
   }
 }

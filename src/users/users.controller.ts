@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { GetUserDto, CreateUserDto } from './users.dto';
 import UserService from './users.service';
 import { HashPass } from '@utils/bcrypt';
+import AuthGuard from '@app/guards/auth.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard)
 class UserController {
   constructor(private readonly service: UserService) {}
 
