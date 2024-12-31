@@ -14,7 +14,7 @@ import { Express } from 'express';
 import { GetProfileDto, CreateProfileDto } from './profile.dto';
 import ProfileSvc from './profile.service';
 import AuthGuard from '@utils/auth.guard';
-import * as path from 'path';
+import { UploadedFile as Uploads } from '../utils/cloudinary';
 
 @Controller('profile')
 @UseGuards(AuthGuard)
@@ -50,17 +50,17 @@ class ProfileController {
 
   @Patch()
   @UseInterceptors(FileInterceptor('file'))
-  updateOne(
+  async updateOne(
     @Request() req: any,
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateProfileDto,
   ): Promise<any> {
     try {
-      const avatar = `${file.filename}${path.extname(file.originalname)}`;
-      return this.service.patchOne({
+      const urlPicture = await Uploads(file.path);
+      return await this.service.patchOne({
         ...body,
         profileId: req.users.profileId,
-        picture: avatar,
+        picture: urlPicture,
       });
     } catch (error) {
       throw error;
