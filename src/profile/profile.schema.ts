@@ -1,9 +1,8 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
-import { HydratedDocument, Types, Schema as mongoSchema } from 'mongoose';
-import { Users } from '../users/users.schema';
+import { HydratedDocument, Types, Document } from 'mongoose';
 
 @Schema({ timestamps: true, autoIndex: false })
-export class Profiles {
+export class Profiles extends Document {
   @Prop({
     required: true,
     type: Types.ObjectId,
@@ -12,9 +11,6 @@ export class Profiles {
     default: () => new Types.ObjectId(),
   })
   profileId: string;
-
-  @Prop({ required: true, type: Types.ObjectId })
-  userId: string;
 
   @Prop({ required: true, type: String })
   fullName: string;
@@ -27,9 +23,6 @@ export class Profiles {
 
   @Prop({ type: String })
   address: string;
-
-  @Prop({ required: true, type: mongoSchema.Types.ObjectId, ref: Users.name })
-  users: { type: Types.ObjectId; ref: 'Users' };
 }
 
 export type ProfileDocument = HydratedDocument<Profiles>;

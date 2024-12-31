@@ -24,17 +24,14 @@ class UserService {
     }
   }
 
-  // ! populate still not works
-  async getUserDetail(_id: string): Promise<any> {
+  async getUserDetail(userId: string): Promise<any> {
     try {
-      const userId = new Types.ObjectId(_id);
-      console.log(userId);
-      const data = await this.profileModel
-        .findOne({ userId })
-        .populate({ path: 'users' })
+      const objectId = new Types.ObjectId(userId);
+      const data = await this.userModel
+        .findOne({ userId: objectId })
+        .populate('profile')
         .exec();
 
-      console.log(data);
       return data;
     } catch (error) {
       throw error;
@@ -47,18 +44,19 @@ class UserService {
       session = await this.connection.startSession();
       session.startTransaction();
 
-      const { userId } = await new this.userModel({ ...body }).save({
-        session,
-      });
-
-      const { profileId } = await new this.profileModel({
-        userId,
+      const profile = await new this.profileModel({
+        ...body,
         fullName: body.fullname,
         picture: this.imageDumy,
       }).save({ session });
 
+      const { userId } = await new this.userModel({
+        ...body,
+        profile: profile._id,
+      }).save({ session });
+
       await session.commitTransaction();
-      return { userId, profileId };
+      return { userId, profile: profile.profileId };
     } catch (error) {
       await session.abortTransaction();
       throw error;

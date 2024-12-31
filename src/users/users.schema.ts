@@ -1,8 +1,9 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Types, Document } from 'mongoose';
+import { Profiles } from '../profile/profile.schema';
 
 @Schema({ timestamps: true, autoIndex: false })
-export class Users {
+export class Users extends Document {
   @Prop({
     required: true,
     type: Types.ObjectId,
@@ -20,6 +21,14 @@ export class Users {
 
   @Prop({ required: true, type: String })
   password: string;
+
+  @Prop({
+    required: true,
+    type: Types.ObjectId,
+    ref: Profiles.name,
+    unique: true,
+  })
+  profile: Profiles | Types.ObjectId;
 }
 
 export type UserDocument = HydratedDocument<Users>;

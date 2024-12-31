@@ -22,10 +22,12 @@ class ProfileService {
     }
   }
 
-  async getOne(_id: string): Promise<any> {
+  async getOne(profileId: string): Promise<any> {
     try {
-      const profileId = new Types.ObjectId(_id);
-      const data = await this.profileModel.findOne({ profileId }).exec();
+      const objectId = new Types.ObjectId(profileId);
+      const data = await this.profileModel
+        .findOne({ profileId: objectId })
+        .exec();
       return data;
     } catch (error) {
       throw error;

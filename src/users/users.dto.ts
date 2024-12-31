@@ -1,6 +1,7 @@
 class CreateUserDto {
   readonly username: string;
   readonly fullname: string;
+  readonly email: string;
   readonly phone: number;
   readonly password: string;
 }
