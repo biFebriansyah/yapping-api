@@ -1,27 +1,36 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { GetUserDto, CreateUserDto } from './users.dto';
 import UserService from './users.service';
 import { HashPass } from '@utils/bcrypt';
-import AuthGuard from '@app/guards/auth.guard';
+import AuthGuard from '@utils/auth.guard';
+import { Public } from '@utils/decorator';
 
 @Controller('users')
 @UseGuards(AuthGuard)
 class UserController {
   constructor(private readonly service: UserService) {}
 
-  @Get(':userId')
-  async getOne(@Param() params: any): Promise<any> {
+  @Get('/all')
+  @Public()
+  async getAll(): Promise<GetUserDto[]> {
     try {
-      return await this.service.getUserDetail(params.userId);
+      return this.service.getAllUser();
     } catch (error) {
       throw error;
     }
   }
 
   @Get()
-  async getAll(): Promise<GetUserDto[]> {
+  async getOne(@Request() req: any): Promise<GetUserDto> {
     try {
-      return this.service.getAllUser();
+      return await this.service.getUserDetail(req.users.userId);
     } catch (error) {
       throw error;
     }

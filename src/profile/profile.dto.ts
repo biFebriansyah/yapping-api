@@ -1,7 +1,5 @@
-import { Types } from 'mongoose';
-
 class CreateProfileDto {
-  readonly userId: Types.ObjectId;
+  readonly profileId: string;
   readonly fullName: string;
   readonly email: string;
   readonly picture: string;
@@ -9,8 +7,7 @@ class CreateProfileDto {
 }
 
 class GetProfileDto {
-  readonly profileId: Types.ObjectId;
-  readonly userId: Types.ObjectId;
+  readonly profileId: string;
   readonly fullName: string;
   readonly email: string;
   readonly picture: string;

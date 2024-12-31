@@ -27,7 +27,7 @@ class UserService {
   async getPasswordByUsername(username: string): Promise<any> {
     try {
       const user = await this.userModel
-        .findOne({ username }, { password: 1, userId: 1 })
+        .findOne({ username }, { password: 1, userId: 1, profile: 1 })
         .exec();
 
       return user;

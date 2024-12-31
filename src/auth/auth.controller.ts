@@ -30,7 +30,11 @@ class UserController {
         throw new UnauthorizedException('wrong password');
       }
 
-      const payload = { sub: user.userId, username: body.username };
+      const payload = {
+        userId: user.userId,
+        profileId: user.profile,
+        username: body.username,
+      };
       return { token: await this.jwt.signAsync(payload) };
     } catch (error) {
       throw new BadGatewayException(error);

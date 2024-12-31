@@ -12,6 +12,9 @@ export class Profiles extends Document {
   })
   profileId: string;
 
+  @Prop({ required: true, type: Types.ObjectId })
+  userId: string;
+
   @Prop({ required: true, type: String })
   fullName: string;
 

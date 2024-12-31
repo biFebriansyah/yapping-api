@@ -9,7 +9,7 @@ export class JwtModules {
         JwtModule.register({
           global: true,
           privateKey: process.env.JWT_KEYS,
-          signOptions: { expiresIn: '60s' },
+          signOptions: { expiresIn: '1h' },
         }),
       ],
       module: JwtModules,

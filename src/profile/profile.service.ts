@@ -25,9 +25,7 @@ class ProfileService {
   async getOne(profileId: string): Promise<any> {
     try {
       const objectId = new Types.ObjectId(profileId);
-      const data = await this.profileModel
-        .findOne({ profileId: objectId })
-        .exec();
+      const data = await this.profileModel.findOne({ _id: objectId }).exec();
       return data;
     } catch (error) {
       throw error;
@@ -43,6 +41,20 @@ class ProfileService {
       }).save();
 
       return profileId;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async patchOne(body: CreateProfileDto): Promise<any> {
+    try {
+      const profileId = new Types.ObjectId(body.profileId);
+      const picture = body.picture || this.imageDumy;
+      const respone = await this.profileModel
+        .updateOne({ _id: profileId }, { ...body, picture })
+        .exec();
+
+      return respone.modifiedCount;
     } catch (error) {
       throw error;
     }
