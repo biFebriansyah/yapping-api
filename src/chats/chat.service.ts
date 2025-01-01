@@ -29,7 +29,22 @@ class ChatService {
     }
   }
 
-  async getUserChat(usersId: string): Promise<any> {
+  async getUserMessage(senderId: string, receiverId: string): Promise<any> {
+    try {
+      return await this.messageModel
+        .find({
+          $or: [
+            { senderId, receiverId },
+            { senderId: receiverId, receiverId: senderId },
+          ],
+        })
+        .exec();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllUserChat(usersId: string): Promise<any> {
     try {
       const objectId = new Types.ObjectId(usersId);
       return await this.chatModel

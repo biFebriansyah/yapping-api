@@ -10,6 +10,7 @@ class GetUserDto {
   readonly userId: string;
   readonly username: string;
   readonly phone: number;
+  readonly profileId: string;
 }
 
 export { CreateUserDto, GetUserDto };

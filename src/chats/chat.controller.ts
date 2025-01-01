@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Body,
+  Param,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -34,10 +35,19 @@ class ChatController {
     }
   }
 
-  @Get()
-  async getOne(@Request() req: any): Promise<GetChatDto> {
+  @Get('/message/:uid')
+  async getOne(@Param() params: any, @Request() req: any): Promise<GetChatDto> {
     try {
-      return await this.service.getUserChat(req.users.userId);
+      return await this.service.getUserMessage(req.users.userId, params.uid);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get()
+  async getOneUser(@Request() req: any): Promise<GetChatDto> {
+    try {
+      return await this.service.getAllUserChat(req.users.userId);
     } catch (error) {
       throw error;
     }

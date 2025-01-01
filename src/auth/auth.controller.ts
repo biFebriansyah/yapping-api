@@ -6,10 +6,11 @@ import {
   BadGatewayException,
   HttpException,
 } from '@nestjs/common';
-import { SignAuthDto } from './auth.dto';
+import { SignInAuthDto, SignUpAuthDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import UserService from '../users/users.service';
 import { Validate } from '../utils/bcrypt';
+import { HashPass } from '@utils/bcrypt';
+import UserService from '../users/users.service';
 
 @Controller('auth')
 class UserController {
@@ -18,8 +19,18 @@ class UserController {
     private readonly jwt: JwtService,
   ) {}
 
-  @Post('/sigin')
-  async sigin(@Body() body: SignAuthDto): Promise<any> {
+  @Post('/signup')
+  async createOne(@Body() body: SignUpAuthDto): Promise<any> {
+    try {
+      const password = await HashPass(body.password);
+      return this.service.createUser({ ...body, password });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('/signin')
+  async sigin(@Body() body: SignInAuthDto): Promise<any> {
     try {
       const user = await this.service.getPasswordByUsername(body.username);
       if (!user?.password) {

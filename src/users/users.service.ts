@@ -18,7 +18,10 @@ class UserService {
 
   async getAllUser(): Promise<any> {
     try {
-      const data = await this.userModel.find({}, { password: 0 }).exec();
+      const data = await this.userModel
+        .find({}, { password: 0 })
+        .populate('profile')
+        .exec();
       return data;
     } catch (error) {
       throw error;
@@ -37,11 +40,24 @@ class UserService {
     }
   }
 
+  async getUserData(userId: string): Promise<any> {
+    try {
+      const objectId = new Types.ObjectId(userId);
+      const data = await this.userModel
+        .findOne({ userId: objectId }, { password: 0 })
+        .exec();
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getUserDetail(userId: string): Promise<any> {
     try {
       const objectId = new Types.ObjectId(userId);
       const data = await this.userModel
-        .findOne({ userId: objectId })
+        .findOne({ userId: objectId }, { password: 0 })
         .populate('profile')
         .exec();
 

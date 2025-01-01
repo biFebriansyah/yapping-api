@@ -4,6 +4,7 @@ import {
   Post,
   Patch,
   Body,
+  Param,
   UseGuards,
   Request,
   UploadedFile,
@@ -30,8 +31,17 @@ class ProfileController {
     }
   }
 
+  @Get('/guest/:userId')
+  async getOne(@Param() params: any): Promise<GetProfileDto> {
+    try {
+      return await this.service.getByUserId(params.userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get()
-  async getOne(@Request() req: any): Promise<GetProfileDto> {
+  async getProfile(@Request() req: any): Promise<GetProfileDto> {
     try {
       return await this.service.getOne(req.users.profileId);
     } catch (error) {

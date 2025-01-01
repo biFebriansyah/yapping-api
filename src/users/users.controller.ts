@@ -27,10 +27,19 @@ class UserController {
     }
   }
 
+  @Get('/detail')
+  async getDetail(@Request() req: any): Promise<GetUserDto> {
+    try {
+      return await this.service.getUserDetail(req.users.userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get()
   async getOne(@Request() req: any): Promise<GetUserDto> {
     try {
-      return await this.service.getUserDetail(req.users.userId);
+      return await this.service.getUserData(req.users.userId);
     } catch (error) {
       throw error;
     }

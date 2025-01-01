@@ -32,6 +32,16 @@ class ProfileService {
     }
   }
 
+  async getByUserId(userId: string): Promise<any> {
+    try {
+      const objectId = new Types.ObjectId(userId);
+      const data = await this.profileModel.findOne({ userId: objectId }).exec();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async createOne(body: CreateProfileDto): Promise<any> {
     try {
       const picture = body.picture || this.imageDumy;

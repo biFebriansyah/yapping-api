@@ -32,7 +32,7 @@ class ChatGateway implements OnGatewayConnection {
   async handleMessage(@MessageBody() message: CreateMessageDto) {
     try {
       await this.service.createChat(message);
-      this.server.to(message.receiverId).emit('receive', message.message);
+      this.server.to(message.receiverId).emit('receive', message);
     } catch (error) {
       throw error;
     }
