@@ -4,6 +4,7 @@ import {
   Body,
   UnauthorizedException,
   BadGatewayException,
+  HttpException,
 } from '@nestjs/common';
 import { SignAuthDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -37,6 +38,9 @@ class UserController {
       };
       return { token: await this.jwt.signAsync(payload) };
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new BadGatewayException(error);
     }
   }

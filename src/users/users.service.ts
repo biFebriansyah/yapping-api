@@ -18,7 +18,8 @@ class UserService {
 
   async getAllUser(): Promise<any> {
     try {
-      return await this.userModel.find({}, { password: 0 }).exec();
+      const data = await this.userModel.find({}, { password: 0 }).exec();
+      return data;
     } catch (error) {
       throw error;
     }
@@ -53,22 +54,25 @@ class UserService {
   async createUser(body: CreateUserDto): Promise<any> {
     let session: ClientSession;
     try {
+      const objectId = new Types.ObjectId();
       session = await this.connection.startSession();
       session.startTransaction();
 
       const profile = await new this.profileModel({
         ...body,
+        userId: objectId,
         fullName: body.fullname,
         picture: this.imageDumy,
       }).save({ session });
 
-      const { userId } = await new this.userModel({
+      await new this.userModel({
         ...body,
+        userId: objectId,
         profile: profile._id,
       }).save({ session });
 
       await session.commitTransaction();
-      return { userId, profile: profile.profileId };
+      return { userId: objectId, profile: profile.profileId };
     } catch (error) {
       await session.abortTransaction();
       throw error;

@@ -37,6 +37,7 @@ class UserController {
   }
 
   @Post()
+  @Public()
   async createOne(@Body() body: CreateUserDto): Promise<any> {
     try {
       const password = await HashPass(body.password);
