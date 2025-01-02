@@ -45,12 +45,12 @@ class ProfileService {
   async createOne(body: CreateProfileDto): Promise<any> {
     try {
       const picture = body.picture || this.imageDumy;
-      const { profileId } = await new this.profileModel({
+      const { _id } = await new this.profileModel({
         ...body,
         picture,
       }).save();
 
-      return profileId;
+      return _id;
     } catch (error) {
       throw error;
     }

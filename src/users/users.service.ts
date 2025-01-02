@@ -31,7 +31,7 @@ class UserService {
   async getPasswordByUsername(username: string): Promise<any> {
     try {
       const user = await this.userModel
-        .findOne({ username }, { password: 1, userId: 1, profile: 1 })
+        .findOne({ username }, { password: 1, _id: 1, profile: 1 })
         .exec();
 
       return user;
@@ -44,7 +44,7 @@ class UserService {
     try {
       const objectId = new Types.ObjectId(userId);
       const data = await this.userModel
-        .findOne({ userId: objectId }, { password: 0 })
+        .findOne({ _id: objectId }, { password: 0 })
         .exec();
 
       return data;
@@ -57,7 +57,7 @@ class UserService {
     try {
       const objectId = new Types.ObjectId(userId);
       const data = await this.userModel
-        .findOne({ userId: objectId }, { password: 0 })
+        .findOne({ _id: objectId }, { password: 0 })
         .populate('profile')
         .exec();
 
@@ -83,12 +83,12 @@ class UserService {
 
       await new this.userModel({
         ...body,
-        userId: objectId,
+        _id: objectId,
         profile: profile._id,
       }).save({ session });
 
       await session.commitTransaction();
-      return { userId: objectId, profile: profile.profileId };
+      return { userId: objectId, profile: profile._id };
     } catch (error) {
       await session.abortTransaction();
       throw error;

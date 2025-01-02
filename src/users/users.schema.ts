@@ -4,15 +4,6 @@ import { Profiles } from '../profile/profile.schema';
 
 @Schema({ timestamps: true, autoIndex: false })
 export class Users extends Document {
-  @Prop({
-    required: true,
-    type: Types.ObjectId,
-    unique: true,
-    index: true,
-    default: () => new Types.ObjectId(),
-  })
-  userId: string;
-
   @Prop({ required: true, type: String, unique: true })
   username: string;
 
@@ -34,7 +25,6 @@ export class Users extends Document {
 export type UserDocument = HydratedDocument<Users>;
 export const UserSchema = SchemaFactory.createForClass(Users).set('toJSON', {
   transform: (doc, ret) => {
-    delete ret._id;
     delete ret.__v;
   },
 });

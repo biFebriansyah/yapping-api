@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
-import { GetUserDto, CreateUserDto } from './users.dto';
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { GetUserDto } from './users.dto';
 import UserService from './users.service';
-import { HashPass } from '@utils/bcrypt';
 import AuthGuard from '@utils/auth.guard';
 import { Public } from '@utils/decorator';
 
@@ -40,17 +32,6 @@ class UserController {
   async getOne(@Request() req: any): Promise<GetUserDto> {
     try {
       return await this.service.getUserData(req.users.userId);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Post()
-  @Public()
-  async createOne(@Body() body: CreateUserDto): Promise<any> {
-    try {
-      const password = await HashPass(body.password);
-      return this.service.createUser({ ...body, password });
     } catch (error) {
       throw error;
     }

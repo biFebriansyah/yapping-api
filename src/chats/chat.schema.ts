@@ -1,5 +1,6 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import { HydratedDocument, Types, Document } from 'mongoose';
+import { Users } from '../users/users.schema';
 
 @Schema({ timestamps: true })
 export class Messages extends Document {
@@ -18,8 +19,11 @@ export class Messages extends Document {
 
 @Schema({ timestamps: true })
 export class Chats extends Document {
-  @Prop({ required: true, type: [{ type: Types.ObjectId }] })
-  participants: string[] | Types.ObjectId;
+  @Prop({ required: true, type: Types.ObjectId, ref: Users.name })
+  senderId: Users | Types.ObjectId;
+
+  @Prop({ required: true, type: Types.ObjectId, ref: Users.name })
+  receiverId: Users | Types.ObjectId;
 
   @Prop({ required: true, type: String })
   lastMessage: string;

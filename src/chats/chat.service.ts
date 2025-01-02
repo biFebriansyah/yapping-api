@@ -12,18 +12,20 @@ class ChatService {
     @InjectModel(Chats.name) private chatModel: Model<Chats>,
   ) {}
 
-  async getAllChats(): Promise<any> {
+  async getAllMessage(): Promise<any> {
     try {
-      const data = await this.chatModel.find().exec();
-      return data;
+      return await this.messageModel.find().sort({ updatedAt: -1 }).exec();
     } catch (error) {
       throw error;
     }
   }
 
-  async getAllMessage(): Promise<any> {
+  async getMessageById(id: string): Promise<any> {
     try {
-      return await this.messageModel.find().exec();
+      return await this.messageModel
+        .findOne({ _id: new Types.ObjectId(id) })
+        .sort({ updatedAt: 1 })
+        .exec();
     } catch (error) {
       throw error;
     }
@@ -44,11 +46,43 @@ class ChatService {
     }
   }
 
-  async getAllUserChat(usersId: string): Promise<any> {
+  async getAllChat(): Promise<any> {
+    try {
+      const data = await this.chatModel.find().exec();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getChatById(id: string): Promise<any> {
+    try {
+      const data = await this.chatModel
+        .findOne({ _id: new Types.ObjectId(id) })
+        .exec();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserChat(usersId: string): Promise<any> {
     try {
       const objectId = new Types.ObjectId(usersId);
       return await this.chatModel
-        .find({ participants: objectId })
+        .find({
+          $or: [{ senderId: objectId }, { receiverId: objectId }],
+        })
+        .populate({
+          path: 'senderId',
+          select: '-password',
+          populate: { path: 'profile', model: 'Profiles' },
+        })
+        .populate({
+          path: 'receiverId',
+          select: '-password',
+          populate: { path: 'profile', model: 'Profiles' },
+        })
         .sort({ updatedAt: -1 })
         .exec();
     } catch (error) {
@@ -56,10 +90,15 @@ class ChatService {
     }
   }
 
-  async isChatExist(participants: any): Promise<any> {
+  async isChatExist(senderId: any, receiverId: any): Promise<any> {
     try {
       const chats = await this.chatModel
-        .findOne({ participants: { $all: participants } })
+        .findOne({
+          $or: [
+            { senderId, receiverId },
+            { senderId: receiverId, receiverId: senderId },
+          ],
+        })
         .exec();
 
       return chats?._id || null;
@@ -82,15 +121,13 @@ class ChatService {
       });
 
       const chatData: CreateChatDto = {
-        participants: [
-          new Types.ObjectId(data.senderId),
-          new Types.ObjectId(data.receiverId),
-        ],
+        senderId: new Types.ObjectId(data.senderId),
+        receiverId: new Types.ObjectId(data.receiverId),
         lastMessage: data.message,
         messages: messageId,
       };
 
-      chatId = await this.isChatExist(chatData.participants);
+      chatId = await this.isChatExist(chatData.senderId, chatData.receiverId);
       if (Boolean(chatId)) {
         await this.chatModel
           .updateOne(

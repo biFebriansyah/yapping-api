@@ -4,8 +4,15 @@ class CreateMessageDto {
   readonly message: string;
 }
 
+class CreateStateDto {
+  readonly senderId: string;
+  readonly receiverId: string;
+  readonly state: string;
+}
+
 class CreateChatDto {
-  readonly participants: any[];
+  readonly senderId: string | any;
+  readonly receiverId: string | any;
   readonly lastMessage: string;
   readonly messages: any;
 }
@@ -23,4 +30,16 @@ class GetChatDto {
   readonly messages: any;
 }
 
-export { CreateMessageDto, CreateChatDto, GetMessageDto, GetChatDto };
+class GetQueryDto {
+  readonly messageId?: string;
+  readonly chatId?: string;
+}
+
+export {
+  CreateMessageDto,
+  CreateChatDto,
+  CreateStateDto,
+  GetMessageDto,
+  GetChatDto,
+  GetQueryDto,
+};

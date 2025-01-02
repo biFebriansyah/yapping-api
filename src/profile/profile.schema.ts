@@ -3,15 +3,6 @@ import { HydratedDocument, Types, Document } from 'mongoose';
 
 @Schema({ timestamps: true, autoIndex: false })
 export class Profiles extends Document {
-  @Prop({
-    required: true,
-    type: Types.ObjectId,
-    unique: true,
-    index: true,
-    default: () => new Types.ObjectId(),
-  })
-  profileId: string;
-
   @Prop({ required: true, type: Types.ObjectId })
   userId: string;
 
@@ -33,7 +24,6 @@ export const ProfileSchemas = SchemaFactory.createForClass(Profiles).set(
   'toJSON',
   {
     transform: (doc, ret) => {
-      delete ret._id;
       delete ret.__v;
     },
   },

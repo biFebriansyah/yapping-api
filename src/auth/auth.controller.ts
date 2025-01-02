@@ -43,7 +43,7 @@ class UserController {
       }
 
       const payload = {
-        userId: user.userId,
+        userId: user._id,
         profileId: user.profile,
         username: body.username,
       };

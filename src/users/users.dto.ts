@@ -7,7 +7,7 @@ class CreateUserDto {
 }
 
 class GetUserDto {
-  readonly userId: string;
+  readonly _id: string;
   readonly username: string;
   readonly phone: number;
   readonly profileId: string;
